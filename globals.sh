@@ -31,6 +31,20 @@ normalize_db_name(){
 	echo $1 | tr \. _
 }
 
+
+# check that script can connect to mysql as root
+# very simplified check - just compares username
+# More "advanced" option is do "SHOW GRANTS" and look for "GRANT ALL PRIVILEGES ON *.*"
+check_mysql_access(){
+	echo "Checking mysql access..."
+	echo "select user();" | $MYSQL | grep 'root@localhost'
+	if [ $? -ne 0 ]; 
+	then
+		echo "Error: script can't connect to mysql / don't have mysql root privileges. Edit globals.sh and try again"	
+	fi
+	return
+}
+
 # checks that all required tools/utilities are installed
 check_prerequisites(){
 	echo -n "Checking required tools (curl etc)... "
@@ -42,6 +56,7 @@ check_prerequisites(){
 	echo "Failed!"
 	exit 1
    fi
+	check_mysql_access
 }
 
 #if [ $# -ne 1 ];

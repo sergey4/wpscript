@@ -41,6 +41,7 @@ check_mysql_access(){
 	if [ $? -ne 0 ]; 
 	then
 		echo "Error: script can't connect to mysql / don't have mysql root privileges. Edit globals.sh and try again"	
+		exit 1
 	fi
 	return
 }

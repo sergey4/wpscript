@@ -60,6 +60,17 @@ check_prerequisites(){
 	check_mysql_access
 }
 
+# parameters: $1 - document root dir
+set_wp_chmod(){
+	# echo set appropriate chmod for upload dirs
+	[ -z "$1" ] && [ ! -d "$1" ] && echo "set_wp_chmod: ERROR: Docroot not set/incorrect" && exit 1
+	mkdir $1/wp-content/uploads
+#	this operation requires root privileges...
+#	chgrp $APACHE_USER $1/wp-content/uploads
+	chmod 777 $1/wp-content/uploads
+
+}
+#
 #if [ $# -ne 1 ];
 #then
 #	print_usage

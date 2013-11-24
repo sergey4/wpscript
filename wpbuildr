@@ -29,6 +29,7 @@ echo ''
 
 OLDDIR=`pwd`
 cd ..
+DOCROOT=`pwd`
 # create the html for site-root (to mimic MT, possibly look at allowing other structures)
 # if html dir exists, exit - let's not break anything!
 if [ -f "wp-config.php" ]; then
@@ -103,7 +104,8 @@ echo ''
 
 # set .gitignore to ignore wp-config.local so we can set different database variables for development vs production
 # ????
-cat "$dir/lib/.gitignore" > .gitignore
+#cat "$dir/lib/.gitignore" > .gitignore
+echo "wp-config.local.php" > .gitignore
 echo "wpscript/" >> .gitignore
 
 # download wordpress, extract and delete original tar
@@ -391,6 +393,7 @@ define('SAVEQUERIES', true);
 
 
 # cool, wp-config(s) has been created, let's commit!
+set_wp_chmod "$DOCROOT"
 git add .
 git commit -q -am "Created wp-config & wp-config.local."
 

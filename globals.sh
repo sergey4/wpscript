@@ -1,6 +1,8 @@
 #!/bin/bash
+# TODO: deny access to .git dirs via .htaccess
 #HOME=/root
 MYSQL="/usr/bin/mysql -u root"
+PHP=/usr/bin/php
 # parameters: $1 - database, $2 - user, $3 - password
 create_database(){
 	echo "create database $1; grant all privileges on $1.* to '$2'@'localhost' identified by '$3'; flush privileges;" | $MYSQL
@@ -26,9 +28,10 @@ print_usage(){
 	exit 1
 }
 
-# parameters: $1 - domain name
+# parameters: $1 - domain name, $2 - type ('dev' or 'uat')
 normalize_db_name(){
-	echo $1 | tr \. _
+	echo -n $1 | tr \. _
+	echo _wp_$2
 }
 
 
@@ -46,17 +49,25 @@ check_mysql_access(){
 	return
 }
 
-# checks that all required tools/utilities are installed
-check_prerequisites(){
-	echo -n "Checking required tools (curl etc)... "
-   local TOOLS_OK=false
-   if [ -x /usr/bin/curl ];
+# check that binary exists
+# parameters: $1 - full path to binary, $2 - binary "human name"
+check_binary(){
+	echo -n "Checking that $2 is installed: "
+   if [ -x $1 ];
    then
-	echo "OK!"	
+	echo "yes"	
    else
-	echo "Failed!"
+	echo "not found!"
 	exit 1
    fi
+}
+
+# checks that all required tools/utilities are installed
+check_prerequisites(){
+	echo "Checking required tools and prerequisites..."
+   local TOOLS_OK=false
+	check_binary /usr/bin/curl "CURL"
+	check_binary "$PHP" "Command-line php"
 	check_mysql_access
 }
 
@@ -64,7 +75,7 @@ check_prerequisites(){
 set_wp_chmod(){
 	# echo set appropriate chmod for upload dirs
 	[ -z "$1" ] && [ ! -d "$1" ] && echo "set_wp_chmod: ERROR: Docroot not set/incorrect" && exit 1
-	mkdir $1/wp-content/uploads
+	[ ! -d "$1/wp-content/uploads" ] && mkdir $1/wp-content/uploads
 #	this operation requires root privileges...
 #	chgrp $APACHE_USER $1/wp-content/uploads
 	chmod 777 $1/wp-content/uploads

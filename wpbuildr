@@ -106,7 +106,7 @@ echo ''
 # ????
 #cat "$dir/lib/.gitignore" > .gitignore
 echo "wp-config.local.php" > .gitignore
-echo "wpscript/" >> .gitignore
+#echo "wpscript/" >> .gitignore
 
 # download wordpress, extract and delete original tar
 if [ ! -f latest.tar.gz ];
@@ -242,6 +242,13 @@ echo ''
 
 
 cd ../../
+
+# for now we generate some passwords / usernames for staging here
+# change them later in staging if needed
+	UAT_DBPASS=`genpasswd 10`
+	UAT_DBNAME=`normalize_db_name $project uat`
+	UAT_DBUSER=$UAT_DBNAME
+
 echo "<?php
 /**
  * The base configurations of the WordPress.
@@ -266,16 +273,16 @@ else {
 
   // ** MySQL settings - You can get this info from your web host ** //
   /** The name of the database for WordPress */
-  define('DB_NAME', '');
+  define('DB_NAME', '$UAT_DBNAME');
 
   /** MySQL database username */
-  define('DB_USER', '');
+  define('DB_USER', '$UAT_DBUSER');
 
   /** MySQL database password */
-  define('DB_PASSWORD', '');
+  define('DB_PASSWORD', '$UAT_DBPASS');
 
   /** MySQL hostname */
-  define('DB_HOST', '');
+  define('DB_HOST', 'localhost');
   
   define('WP_CACHE', true);
 
@@ -361,7 +368,7 @@ if [ "$mamp" == 'yes' ]; then
   /Applications/MAMP/Library/bin/mysql -uroot -proot -e "CREATE DATABASE \`$project\`"
 else
 	DBPASS=`genpasswd 10`
-	DBNAME=`normalize_db_name $project`
+	DBNAME=`normalize_db_name $project dev`
 	DBUSER=$DBNAME
 	create_database "$DBUSER" "$DBNAME" "$DBPASS"
   # create local database using whatever MySQL the user is using
@@ -389,7 +396,7 @@ define('WP_DEBUG', true);
 // Save queries
 define('SAVEQUERIES', true);
 
-\$table_prefix  = 'wp_"$project"_';" > wp-config.local.php
+\$table_prefix  = 'wp_';" > wp-config.local.php
 
 
 # cool, wp-config(s) has been created, let's commit!

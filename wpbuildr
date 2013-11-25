@@ -448,5 +448,7 @@ echo '---> WPBUILDR COMPLETE'
 echo '------------------------------------------------------------------------'
 echo ''
 echo "--- Don't forget to add remote repo and push your changes there: ---"
+echo "cd $DOCROOT"
 echo "git remote add origin https://somehost/somepath/somerepo.git"
 echo "git push origin master"
+echo " "

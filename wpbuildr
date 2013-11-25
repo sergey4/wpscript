@@ -388,7 +388,7 @@ else
 	DBPASS=`genpasswd 10`
 	DBNAME=`normalize_db_name $project dev`
 	DBUSER=`normalize_db_user $project dev`
-	create_database "$DBUSER" "$DBNAME" "$DBPASS"
+	create_database "$DBNAME" "$DBUSER" "$DBPASS"
   # create local database using whatever MySQL the user is using
 fi
 

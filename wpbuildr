@@ -265,7 +265,7 @@ cd ../../
 # change them later in staging if needed
 	UAT_DBPASS=`genpasswd 10`
 	UAT_DBNAME=`normalize_db_name $project uat`
-	UAT_DBUSER=$UAT_DBNAME
+	UAT_DBUSER=`normalize_db_user $project uat`
 
 echo "<?php
 /**
@@ -387,7 +387,7 @@ if [ "$mamp" == 'yes' ]; then
 else
 	DBPASS=`genpasswd 10`
 	DBNAME=`normalize_db_name $project dev`
-	DBUSER=$DBNAME
+	DBUSER=`normalize_db_user $project dev`
 	create_database "$DBUSER" "$DBNAME" "$DBPASS"
   # create local database using whatever MySQL the user is using
 fi

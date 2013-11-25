@@ -30,11 +30,19 @@ genpasswd() {
 #	exit 1
 #}
 
-# parameters: $1 - domain name, $2 - type ('dev' or 'uat')
+# parameters: $1 - project name, $2 - type ('dev' or 'uat')
 normalize_db_name(){
 	echo -n $1 | tr \. _
 	echo _wp_$2
 }
+
+# parameters: $1 - project name, $2 - type ('dev' or 'uat')
+# cuts to fit 16 character limit
+normalize_db_user(){
+	local NAME1=`echo -n $1 | tr \. _ | cut -c-12`
+	echo $NAME1'_'$2
+}
+
 
 
 # check that script can connect to mysql as root

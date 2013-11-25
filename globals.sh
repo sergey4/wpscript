@@ -3,6 +3,8 @@
 #HOME=/root
 MYSQL="/usr/bin/mysql -u root"
 PHP=/usr/bin/php
+GIT=/usr/bin/git
+
 # parameters: $1 - database, $2 - user, $3 - password
 create_database(){
 	echo "create database $1; grant all privileges on $1.* to '$2'@'localhost' identified by '$3'; flush privileges;" | $MYSQL
@@ -23,10 +25,10 @@ genpasswd() {
     tr -dc A-Za-z0-9_ < /dev/urandom | head -c ${l}
 }
 
-print_usage(){
-	echo "Usage: install_wp.sh <project_name>"
-	exit 1
-}
+#print_usage(){
+#	echo "Usage: install_wp.sh <project_name>"
+#	exit 1
+#}
 
 # parameters: $1 - domain name, $2 - type ('dev' or 'uat')
 normalize_db_name(){
@@ -68,7 +70,9 @@ check_prerequisites(){
    local TOOLS_OK=false
 	check_binary /usr/bin/curl "CURL"
 	check_binary "$PHP" "Command-line php"
+	check_binary "$GIT" "Git"
 	check_mysql_access
+	echo "### Check completed ###"
 }
 
 # parameters: $1 - document root dir

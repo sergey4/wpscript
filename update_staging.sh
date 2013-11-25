@@ -1,16 +1,24 @@
-#!/bin/sh
-# TODO: dir-independent
-# currently it is assumed that your run this script from "wpscript" dir and
-# your WP installation dir is one level up ( "cd .." )
+#!/bin/bash
 . ./globals.sh
-if [ -f "../wp-config.php" ];
+print_usage(){
+	echo "Usage: update_staging.sh <rootdir>"
+	exit 1
+}
+
+if [ $# -ne 1 ];
+then
+       print_usage
+fi
+
+DOCROOT=$1
+if [ -f "$DOCROOT/wp-config.php" ];
 then
 	# get newest version from repo
 	echo "Pulling changes from git repo..."
-	cd ..
+	cd $DOCROOT
 	git pull origin
 	[ $? -ne 0 ] && echo "Errors during fetch, exiting... Fix errors and run again." && exit 1
-	set_wp_chmod .
+	set_wp_chmod $DOCROOT
 	# check / create database
 #	this line is unusable, because if db doesn't exist it will give 'db connection error' page
 #	UAT_DBNAME=`$PHP -r "include('wp-config.php');print DB_NAME;"`

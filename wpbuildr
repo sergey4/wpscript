@@ -124,7 +124,7 @@ echo ''
 # ????
 #cat "$dir/lib/.gitignore" > .gitignore
 echo "wp-config.local.php" > .gitignore
-#echo "wpscript/" >> .gitignore
+echo "wpscript/" >> .gitignore
 
 # download wordpress, extract and delete original tar
 if [ ! -f latest.tar.gz ];
